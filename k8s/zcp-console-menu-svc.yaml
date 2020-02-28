@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: zcp-console-menu-svc
+  namespace: ayoung
+spec:
+  selector:
+    app: zcp-console-menu
+  ports:
+    - protocol: TCP
+      port: 8080
+      nodePort: 30083
+  type: NodePort

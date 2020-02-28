@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zcp-console-menu-deploy
+  namespace: ayoung
+spec:
+  selector:
+    matchLabels:
+      app: zcp-console-menu
+
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: zcp-console-menu
+    spec:
+      containers:
+        - name: zcp-console-menu
+          image: lay126/zcp-console-menu:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: env.namespace
+              value: ayoung
+          volumeMounts:
+            - name: config
+              mountPath: /config
+      volumes:
+        - name: config
+          configMap:
+            name: zcp-console-menu-cm

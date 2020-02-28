@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: zcp-console-menu-ing
+  namespace: ayoung
+spec:
+  rules:
+  - host: zcp-console-menu.cloudzcp.io
+    http:
+      paths:
+      - backend:
+          serviceName: zcp-console-menu-svc
+          servicePort: 8080
+  tls:
+  - hosts:
+    - zcp-console-menu.cloudzcp.io
+    secretName: cloudzcp-io-cert

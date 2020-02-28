@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zcp-console-menu-cm
+  namespace: ayoung
+data:
+  application.properties: |-
+    bean.data=Testing reload! Message from backend is: %s <br/> Services : %s

@@ -25,11 +25,13 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web:2.2.4.RELEASE'
     implementation 'org.springframework.boot:spring-boot-dependencies:2.2.1.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-parent:2.2.1.RELEASE'
     implementation 'org.springframework.cloud:spring-cloud-starter:2.2.1.RELEASE'
     implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes:0.2.0.RELEASE'
     implementation 'org.springframework.cloud:spring-cloud-starter-kubernetes-config:1.1.1.RELEASE'
     runtimeOnly 'org.springframework.boot:spring-boot-devtools:2.2.4.RELEASE'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.2.4.RELEASE'
+    compile 'org.springframework.cloud:spring-cloud-commons:2.2.1.RELEASE'
 }
 
 group = 'com.skcc'

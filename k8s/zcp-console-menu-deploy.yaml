@@ -1,6 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    configmap.reloader.stakater.com/reload: "zcp-console-menu-cm"
   name: zcp-console-menu-deploy
   namespace: ayoung
 spec:

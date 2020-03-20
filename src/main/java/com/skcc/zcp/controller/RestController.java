@@ -6,6 +6,9 @@ import jdk.nashorn.internal.objects.annotations.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,12 +20,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class RestController {
     @Autowired
     private PropertiesConfig yamlConfig;
-//    @Autowired
-//    private DiscoveryClient discoveryClient;
 
     @GetMapping("/data")
     public String load() {
-        return String.format(yamlConfig.getData(), "", "");
+        String data = "error";
+        try {
+            data = String.format(yamlConfig.getData(), "", "");
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        }
+        return data;
     }
 
 }
+

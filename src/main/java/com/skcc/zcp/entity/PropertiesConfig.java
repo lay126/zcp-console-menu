@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "bean")
 public class PropertiesConfig {
 
-    private String data = "Message from backend is: %s <br/> Services : %s";;
+    private String data = "This is default data";
 
     public void setData(String data) {
         this.data = data;

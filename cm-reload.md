@@ -56,6 +56,7 @@ bean.data=Message in application.properties
 
 #### 3. k8s 리소스 생성 및 수정 
 - role.yaml
+namespace의 default Role에 configmaps를 get, list, watch 할 수 있는 권한을 부여한다
 ``` yaml
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
@@ -81,7 +82,9 @@ roleRef:
   name: default
   apiGroup: ""
 ```
+
 - configmap.yaml
+resources/application.properties
 ``` yaml
 apiVersion: v1
 kind: ConfigMap
@@ -92,7 +95,9 @@ data:
   application.properties: |-
     bean.data=Testing reload! Message from configmap
 ```
+
 - deployment.yaml
+metadata:annoation:configmap.reloader.stakater.com/reload에 
 ``` yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -127,6 +132,7 @@ spec:
           configMap:
             name: console-boot-template-cm
 ```
+
 - service.yaml
 ``` yaml
 kind: Service
@@ -143,6 +149,7 @@ spec:
       nodePort: 30083
   type: NodePort
   ```
+  
 - ingress.yaml
 ``` yaml
 apiVersion: extensions/v1beta1
@@ -164,6 +171,22 @@ spec:
     secretName: cloudzcp-io-cert
 ```
 
-#### 4. 빌드/배포
+#### 4. 빌드
 - Dockerfile
-- gradle.build
+``` dockerfile
+FROM openjdk:8-alpine
+
+ADD zcp-0.0.1-SNAPSHOT.war app.war
+
+VOLUME /tmp
+
+RUN touch /app.war
+
+EXPOSE 8080/tcp
+
+ENV SPRING_ACTIVE_PROFILE stage
+ENV JAVA_ARGS -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=${SPRING_ACTIVE_PROFILE}
+ENV JAVA_OPTS -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=2
+
+ENTRYPOINT ["/bin/sh", "-c", "java ${JAVA_ARGS} ${JAVA_OPTS} -jar /app.war"]
+```

@@ -9,7 +9,7 @@ ConfigMap의 변경을 인지하여 서비스가 자동으로 재기동 되도�
 ```
 $ helm install stakater/reloader
 ```
-Default namespace에 설치 하는 경우, 모든 namspace를 대상으로 동작한다.
+Default namespace에 설치 하는 경우, 모든 namspace를 대상으로 동작한다.   
 특정 namespace에 대해서만 동작하게 하고 싶은 경우, 특정 namespace를 지정하여 설치한다.   
 
 

@@ -22,15 +22,8 @@ src/PropertiesConfig.java
 public class PropertiesConfig {
 
     private String data = "This is default data";
-
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    public String getData() {
-        return data;
-    }
-
+    
+    ... setter & getter
 }
 ```
 
@@ -58,15 +51,118 @@ public class RestController {
 
 resources/application.properties
 ```
-zcp-console-menu-cm.data=Message from backend is:
+bean.data=Message in application.properties
 ```
 
 #### 3. k8s 리소스 생성 및 수정 
 - role.yaml
-- deployment.yaml
+``` yaml
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: ayoung
+  name: default
+rules:
+  - apiGroups: ["", "extensions", "apps"]
+    resources: ["configmaps", "pods", "services", "endpoints", "secrets"]
+    verbs: ["get", "list", "watch"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: default-binding
+  namespace: ayoung
+subjects:
+  - kind: ServiceAccount
+    name: default
+    apiGroup: ""
+roleRef:
+  kind: Role
+  name: default
+  apiGroup: ""
+```
 - configmap.yaml
+``` yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: console-boot-template
+  namespace: ayoung
+data:
+  application.properties: |-
+    bean.data=Testing reload! Message from configmap
+```
+- deployment.yaml
+``` yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    configmap.reloader.stakater.com/reload: "console-boot-template"
+  name: console-boot-template
+  namespace: ayoung
+spec:
+  selector:
+    matchLabels:
+      app: console-boot-template
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: console-boot-template
+    spec:
+      containers:
+        - name: console-boot-template
+          image: cloudzcp/console-boot-template:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: env.namespace
+              value: ayoung
+          volumeMounts:
+            - name: config
+              mountPath: /config
+      volumes:
+        - name: config
+          configMap:
+            name: console-boot-template-cm
+```
 - service.yaml
+``` yaml
+kind: Service
+apiVersion: v1
+metadata:
+  name: console-boot-template-svc
+  namespace: ayoung
+spec:
+  selector:
+    app: console-boot-template
+  ports:
+    - protocol: TCP
+      port: 8080
+      nodePort: 30083
+  type: NodePort
+  ```
 - ingress.yaml
+``` yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: console-boot-template-ing
+  namespace: ayoung
+spec:
+  rules:
+  - host: console-boot-template.cloudzcp.io
+    http:
+      paths:
+      - backend:
+          serviceName: console-boot-template-svc
+          servicePort: 8080
+  tls:
+  - hosts:
+    - console-boot-template.cloudzcp.io
+    secretName: cloudzcp-io-cert
+```
 
 #### 4. 빌드/배포
 - Dockerfile

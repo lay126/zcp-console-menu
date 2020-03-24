@@ -190,4 +190,28 @@ deployment.apps/vehement-tapir-reloader   1/1     1            1           13d
 NAME                                                 DESIRED   CURRENT   READY   AGE
 replicaset.apps/console-boot-template-57f86b5896     1         1         1       16m
 replicaset.apps/vehement-tapir-reloader-6cfd88bbff   1         1         1       13d
+
+$ kubectl get configmap
+NAME                       DATA   AGE
+console-boot-template-cm   1      131m
+```
+#### configmap edit
+```
+$ kubectl edit cm console-boot-template-cm
+---
+apiVersion: v1
+data:
+  application.properties: bean.data=Testing reload! Message from cm!    # CHANGE IT
+kind: ConfigMap
+```
+
+#### Pod Reload
+```
+$ kgp
+NAME                                       READY   STATUS              RESTARTS   AGE
+console-boot-template-57f86b5896-hxtbk     1/1     Running             0          19m      
+console-boot-template-656575f45f-rt7n6     0/1     ContainerCreating   0          2s       # 변경된 cm반영된 Pod 생성
+vehement-tapir-reloader-6cfd88bbff-2sszf   1/1     Running             0          13d
+...
+console-boot-template-57f86b5896-hxtbk     1/1     Terminating   0          20m            # 기존 Pod 중지 됨
 ```

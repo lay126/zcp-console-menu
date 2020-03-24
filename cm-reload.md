@@ -1,15 +1,15 @@
-### 목적
-ConfigMap의 변경을 인지하여 Deployment의 Pod가 자동으로 재기동 되도록 한다.   
+## Purpose
+ConfigMap or Secret가 변경 될 경우, 이를 인지하여 Deployment의 Pod가 자동으로 재기동 되도록 한다.    
    
 #### 사용되는 OpenSource
 > - [stakater/Reloader](https://github.com/stakater/Reloader)   
    
-### 적용 순서
+## How to use
 #### 1. stakater/Reloader 설치
 ```
 $ helm install stakater/reloader
 ```
-Default namespace에 설치 하는 경우, 모든 namspace를 대상으로 동작한다.   
+Default namespace에 설치 하는 경우, 모든 namspace의 configmap, secrets을 대상으로 동작한다.   
 특정 namespace에 대해서만 동작하게 하고 싶은 경우, 특정 namespace를 지정하여 설치한다.   
 
 
@@ -217,3 +217,5 @@ vehement-tapir-reloader-6cfd88bbff-2sszf   1/1     Running             0        
 # 기존 Pod 중지 됨
 console-boot-template-57f86b5896-hxtbk     1/1     Terminating   0          20m
 ```
+![Alt text](/Users/ayoung/Documents/KUBE/git/cloudzcp-pog-dev/before.png "Before")
+![Alt text](/Users/ayoung/Documents/KUBE/git/cloudzcp-pog-dev/after.png "After")

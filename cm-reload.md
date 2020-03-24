@@ -171,3 +171,23 @@ spec:
     - console-boot-template.cloudzcp.io
     secretName: cloudzcp-io-cert
 ```
+
+### 동작
+#### 리소스 상황
+``` bash
+$ kubectl get all
+NAME                                           READY   STATUS    RESTARTS   AGE
+pod/console-boot-template-57f86b5896-hxtbk     1/1     Running   0          16m
+pod/vehement-tapir-reloader-6cfd88bbff-2sszf   1/1     Running   0          13d
+
+NAME                                TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+service/console-boot-template-svc   NodePort   172.21.71.209   <none>        8080:30744/TCP   131m
+
+NAME                                      READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/console-boot-template     1/1     1            1           131m
+deployment.apps/vehement-tapir-reloader   1/1     1            1           13d
+
+NAME                                                 DESIRED   CURRENT   READY   AGE
+replicaset.apps/console-boot-template-57f86b5896     1         1         1       16m
+replicaset.apps/vehement-tapir-reloader-6cfd88bbff   1         1         1       13d
+```

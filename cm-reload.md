@@ -196,7 +196,7 @@ NAME                       DATA   AGE
 console-boot-template-cm   1      131m
 ```
 #### configmap edit
-```
+``` bash
 $ kubectl edit cm console-boot-template-cm
 ---
 apiVersion: v1
@@ -206,12 +206,14 @@ kind: ConfigMap
 ```
 
 #### Pod Reload
-```
+``` bash
 $ kgp
 NAME                                       READY   STATUS              RESTARTS   AGE
-console-boot-template-57f86b5896-hxtbk     1/1     Running             0          19m      
-console-boot-template-656575f45f-rt7n6     0/1     ContainerCreating   0          2s       # 변경된 cm반영된 Pod 생성
+console-boot-template-57f86b5896-hxtbk     1/1     Running             0          19m
+# 변경된 cm반영된 Pod 생성
+console-boot-template-656575f45f-rt7n6     0/1     ContainerCreating   0          2s
 vehement-tapir-reloader-6cfd88bbff-2sszf   1/1     Running             0          13d
 ...
-console-boot-template-57f86b5896-hxtbk     1/1     Terminating   0          20m            # 기존 Pod 중지 됨
+# 기존 Pod 중지 됨
+console-boot-template-57f86b5896-hxtbk     1/1     Terminating   0          20m
 ```

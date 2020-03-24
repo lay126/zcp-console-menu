@@ -22,7 +22,6 @@ src/PropertiesConfig.java
 public class PropertiesConfig {
 
     private String data = "This is default data";
-    
     ... setter & getter
 }
 ```
@@ -50,12 +49,13 @@ public class RestController {
 ```
 
 resources/application.properties
+
 ```
 bean.data=Message in application.properties
 ```
 
 #### 3. k8s 리소스 생성 및 수정 
-- role.yaml
+- role.yaml   
 namespace의 default Role에 configmaps를 get, list, watch 할 수 있는 권한을 부여한다
 ``` yaml
 kind: Role
@@ -84,7 +84,6 @@ roleRef:
 ```
 
 - configmap.yaml
-resources/application.properties
 ``` yaml
 apiVersion: v1
 kind: ConfigMap
@@ -97,7 +96,7 @@ data:
 ```
 
 - deployment.yaml
-metadata:annoation:configmap.reloader.stakater.com/reload에 변화감지 대상 ConfigMap의 이름을 지정한다
+metadata:annoation:configmap.reloader.stakater.com/reload에 감지 대상 ConfigMap의 이름을 지정한다
 ``` yaml
 apiVersion: apps/v1
 kind: Deployment

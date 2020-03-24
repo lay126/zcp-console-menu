@@ -217,5 +217,5 @@ vehement-tapir-reloader-6cfd88bbff-2sszf   1/1     Running             0        
 # 기존 Pod 중지 됨
 console-boot-template-57f86b5896-hxtbk     1/1     Terminating   0          20m
 ```
-![Alt text](/Users/ayoung/Documents/KUBE/git/cloudzcp-pog-dev/before.png "Before")
-![Alt text](/Users/ayoung/Documents/KUBE/git/cloudzcp-pog-dev/after.png "After")
+![Alt text](./img/cm-reload-before.png "cm-reload before")
+![Alt text](./img/cm-reload-after.png "cm-reload after")

@@ -89,7 +89,7 @@ resources/application.properties
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: console-boot-template
+  name: console-boot-template-cm         # CHANG IT
   namespace: ayoung
 data:
   application.properties: |-
@@ -97,19 +97,20 @@ data:
 ```
 
 - deployment.yaml
-metadata:annoation:configmap.reloader.stakater.com/reload에 
+metadata:annoation:configmap.reloader.stakater.com/reload에 변화감지 대상 ConfigMap의 이름을 지정한다
 ``` yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    configmap.reloader.stakater.com/reload: "console-boot-template"
+    configmap.reloader.stakater.com/reload: "console-boot-template-cm"     # CHANGE IT
   name: console-boot-template
   namespace: ayoung
 spec:
   selector:
     matchLabels:
       app: console-boot-template
+
   replicas: 1
   template:
     metadata:
@@ -118,7 +119,7 @@ spec:
     spec:
       containers:
         - name: console-boot-template
-          image: cloudzcp/console-boot-template:latest
+          image: lay126/console-boot-template:latest
           ports:
             - containerPort: 8080
           env:
@@ -169,24 +170,4 @@ spec:
   - hosts:
     - console-boot-template.cloudzcp.io
     secretName: cloudzcp-io-cert
-```
-
-#### 4. 빌드
-- Dockerfile
-``` dockerfile
-FROM openjdk:8-alpine
-
-ADD zcp-0.0.1-SNAPSHOT.war app.war
-
-VOLUME /tmp
-
-RUN touch /app.war
-
-EXPOSE 8080/tcp
-
-ENV SPRING_ACTIVE_PROFILE stage
-ENV JAVA_ARGS -Djava.security.egd=file:/dev/./urandom -Dspring.profiles.active=${SPRING_ACTIVE_PROFILE}
-ENV JAVA_OPTS -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap -XX:MaxRAMFraction=2
-
-ENTRYPOINT ["/bin/sh", "-c", "java ${JAVA_ARGS} ${JAVA_OPTS} -jar /app.war"]
 ```

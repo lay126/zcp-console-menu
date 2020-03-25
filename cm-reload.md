@@ -173,8 +173,8 @@ spec:
     secretName: cloudzcp-io-cert
 ```
 
-### 동작
-#### 리소스 상황
+## 동작
+#### K8S resources
 ``` bash
 $ kubectl get all
 NAME                                           READY   STATUS    RESTARTS   AGE
@@ -224,15 +224,15 @@ console-boot-template-57f86b5896-hxtbk     1/1     Terminating   0          20m
 ![Alt text](./img/cm-reload-after.png "cm-reload after")
 
 
-#### HA 
-Deployment replicas를 3개로 조정
+#### Rolling Update
+Deployment replicas를 3개로 조정.
 ``` bash
 NAME                                       READY   STATUS              RESTARTS   AGE
 console-boot-template-74759dcf44-9598r     1/1     Running             0          111s
 console-boot-template-74759dcf44-nh9vj     1/1     Running             0          111s
 console-boot-template-74759dcf44-xlnbj     1/1     Running             0          111s
 ```
-Configmap을 수정 한 뒤, pod들의 Rolling Update를 확인한다.
+Configmap을 수정 한 뒤, Pod의 Rolling Update를 확인.
 ``` bash
 $ k get pod 
 console-boot-template-66686d9df7-svnr9     0/1     ContainerCreating   0          1s

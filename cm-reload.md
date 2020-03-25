@@ -84,7 +84,8 @@ roleRef:
   apiGroup: ""
 ```
 
-- configmap.yaml
+- configmap.yaml   
+data:application.properties: 필드에 소스코드에서 사용하는 데이터를 입력한다
 ``` yaml
 apiVersion: v1
 kind: ConfigMap
@@ -96,7 +97,7 @@ data:
     bean.data=Testing reload! Message from configmap    # CHANG IT   
 ```
 
-- deployment.yaml
+- deployment.yaml   
 metadata:annoation:configmap.reloader.stakater.com/reload에 감지 대상 ConfigMap의 이름을 지정한다
 ``` yaml
 apiVersion: apps/v1

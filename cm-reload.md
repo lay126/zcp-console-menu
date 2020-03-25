@@ -13,10 +13,12 @@ Default namespace에 설치 하는 경우, 모든 namspace의 configmap, secrets
 특정 namespace에 대해서만 동작하게 하고 싶은 경우, 특정 namespace를 지정하여 설치한다.   
 
 
-#### 2. 소스 코드 수정
+#### 2. 소스 코드
 
-src/PropertiesConfig.java
-```
+- src/PropertiesConfig.java   
+configmap의 data필드의 값을 (@ConfigurationProperties)prefix.Field 형태로 가져와 사용한다.   
+아래 코드에서는, console-boot-template-cm Configmap의 data:application.properties: 에서 가져온 값을 사용한다.   
+``` java
 @Configuration
 @ConfigurationProperties(prefix = "bean")
 public class PropertiesConfig {
@@ -26,8 +28,8 @@ public class PropertiesConfig {
 }
 ```
 
-src/RestController.java
-```
+- src/RestController.java
+``` java
 @org.springframework.web.bind.annotation.RestController
 @RequestMapping("/test")
 public class RestController {
@@ -48,10 +50,9 @@ public class RestController {
 }
 ```
 
-resources/application.properties
-
+- resources/application.properties
 ```
-bean.data=Message in application.properties
+bean.data=Message from apllication.properties
 ```
 
 #### 3. k8s 리소스 생성 및 수정 
@@ -92,7 +93,7 @@ metadata:
   namespace: ayoung
 data:
   application.properties: |-
-    bean.data=Testing reload! Message from configmap
+    bean.data=Testing reload! Message from configmap    # CHANG IT   
 ```
 
 - deployment.yaml
@@ -220,3 +221,31 @@ console-boot-template-57f86b5896-hxtbk     1/1     Terminating   0          20m
 ![Alt text](./img/cm-reload-before.png "cm-reload before")
 - Configmap 수정 후
 ![Alt text](./img/cm-reload-after.png "cm-reload after")
+
+
+#### HA 
+Deployment replicas를 3개로 조정
+``` bash
+NAME                                       READY   STATUS              RESTARTS   AGE
+console-boot-template-74759dcf44-9598r     1/1     Running             0          111s
+console-boot-template-74759dcf44-nh9vj     1/1     Running             0          111s
+console-boot-template-74759dcf44-xlnbj     1/1     Running             0          111s
+```
+Configmap을 수정 한 뒤, pod들의 Rolling Update를 확인한다.
+``` bash
+$ k get pod 
+console-boot-template-66686d9df7-svnr9     0/1     ContainerCreating   0          1s
+console-boot-template-74759dcf44-9598r     1/1     Running             0          110s
+console-boot-template-74759dcf44-nh9vj     1/1     Running             0          110s
+console-boot-template-74759dcf44-xlnbj     1/1     Running             0          110s
+$ k get pod 
+console-boot-template-66686d9df7-pdtxv     0/1     ContainerCreating   0          1s
+console-boot-template-66686d9df7-svnr9     1/1     Running             0          10s
+console-boot-template-66686d9df7-zwvbl     1/1     Running             0          5s
+console-boot-template-74759dcf44-nh9vj     0/1     Terminating         0          119s
+console-boot-template-74759dcf44-xlnbj     1/1     Running             0          119s
+$ k get pod 
+console-boot-template-66686d9df7-pdtxv     1/1     Running   0          10s
+console-boot-template-66686d9df7-svnr9     1/1     Running   0          19s
+console-boot-template-66686d9df7-zwvbl     1/1     Running   0          14s
+```
